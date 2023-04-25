@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS user_info;
+CREATE TABLE user_info(
+	usr_id TEXT PRIMARY KEY,
+	usr_pwd TEXT NOT NULL
+);
+
+DROP TABLE IF EXISTS student_info;
+CREATE TABLE student_info(
+	name TEXT NOT NULL,
+	age INTEGER PRIMARY KEY,
+	class INTEGER NOT NULL,
+	height INTEGER NOT NULL,
+	weight INTEGER NOT NULL
+);

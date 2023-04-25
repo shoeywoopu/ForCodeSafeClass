@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <style type="text/css">
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .searchArea {
+            width: 550px;
+            margin: auto;
+            margin-top: 200px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px #aaa;
+        }
+
+        .searchTitle {
+            display: center;
+            margin-left: 30px;
+        }
+
+        #inputAge {
+            font-size: 20px;
+            margin-left: 50px;
+        }
+
+        .searchForm {
+            font-size: 20px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        button {
+            font-size: 20px;
+            margin-left: 50px;
+            background-color: darkgreen;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        table {
+            text-align: center;
+            margin-left: 15px;
+            margin-top: 30px;
+            font-size: 20px;
+        }
+
+        tr {
+            padding: 30px;
+        }
+
+        td {
+            padding: 30px;
+        }
+
+    </style>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+</head>
+<body>
+    <!--用户主页，在中间写一个框，用户可以输入查询的内容进行查询-->
+    <div class="searchArea">
+        <h2>学生查询</h2>
+        <div class="searchForm">
+            <label class="searchTitle">年龄:</label>
+            <input type="text" name="age" id="inputAge" required>
+            <button type="submit" id="age-search" onclick="search()">查询</button>
+        </div>
+        <table id="searchResult">
+        </table>
+    </div>
+
+    <script type="text/javascript">
+
+        function showTable(data) {
+              var table = document.getElementById('searchResult');
+              table.innerHTML = '<tr><th>姓名</th>  <th>年龄</th> <th>班级</th> <th>身高</th> <th>体重</th></tr>';
+              for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                console.log(item['name']);
+                var row = document.createElement('tr');
+                row.innerHTML = '<td>' + item['name'] + '</td><td>' + item['age'] + '</td><td>' + item['class'] + '</td><td>'
+                                            + item['height'] + '</td><td>' + item['weight'] + '</td>';
+                table.appendChild(row);
+              }
+        }
+
+        function search() {
+            var age = $('#inputAge').val();
+            var params = {
+                "age": age
+            };
+            $.ajax({
+                url: 'http://127.0.0.1:5000/search',
+                type: 'POST',
+                data: params,
+                async:true,
+                success: function(data) {
+                    if(data=='NO') {
+                        var thisTable = document.getElementById("searchResult");
+                        for(let i=0; i<thisTable.rows.length; i++){
+                            for(let j=0; j<thisTable.rows[i].cells.length; j++){
+                                thisTable.rows[i].cells[j].innerHTML = "";
+                            }
+                        }
+                        alert('无此年龄的学生');
+                    } else {
+                        showTable(data);
+                        console.log('查询成功');
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert("查询失败");
+                }
+            });
+        }
+
+
+    </script>
+</body>
+</html>
